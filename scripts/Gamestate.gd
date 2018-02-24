@@ -3,6 +3,7 @@ extends Node
 const DEFAULT_PORT = 27015
 const DEFAULT_IP = "83.254.45.109"
 const MAX_PLAYERS = 16
+const VERSION = "1.0"
 
 onready var player_scene = load("res://scenes/Player.tscn")
 
@@ -30,8 +31,8 @@ func create_player(id, local):
 		Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 	
 	player.name = str(id)
-	var current_scene = get_tree().current_scene.get_node("Players")
-	current_scene.add_child(player)
+	var current_scene = get_tree().current_scene
+	current_scene.get_node("Players").add_child(player)
 	if current_scene.has_node("World/spawnPoint"):
 		player.transform.origin = current_scene.get_node("World/spawnPoint").transform.origin
 	
@@ -77,8 +78,19 @@ func _connected_ok():
 func _connected_fail():
 	get_tree().set_network_peer(null)
 	
+func leave_game():
+	print("Left game")
+	host.close_connection()
+	get_tree().current_scene.get_node("Players").queue_free()
+	
+remote func check_version(version):
+	if version != VERSION:
+		OS.alert(str("Wrong version! Server: ", version, " You: ", VERSION))
+		get_tree().quit()
+	
 func _player_connected(id):
-	pass
+	if get_tree().is_network_server():
+		rpc_id(id, "check_version", VERSION)
 	
 func _player_disconnected(id):
 	if get_tree().is_network_server():

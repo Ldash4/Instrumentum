@@ -78,4 +78,3 @@ func _physics_process(delta):
 		velocity = slave_velocity
 	
 	move_and_slide(velocity, UP)
-	print(velocity)
