@@ -68,8 +68,6 @@ func _physics_process(delta):
 		
 		if not is_on_floor():
 			velocity.y += GRAVITY * delta
-		else:
-			velocity.y = clamp(velocity.y, -1000, 0)
 		
 		rset_unreliable("slave_position", transform.origin)
 		rset_unreliable("slave_velocity", velocity)
@@ -77,4 +75,4 @@ func _physics_process(delta):
 		transform.origin = slave_position
 		velocity = slave_velocity
 	
-	move_and_slide(velocity, UP)
+	velocity = move_and_slide(velocity, UP)
