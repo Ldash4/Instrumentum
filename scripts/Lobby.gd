@@ -31,3 +31,9 @@ func _on_join_pressed():
 func _ready():
 	get_node("Panel/Host").connect("pressed", self, "_on_host_pressed")
 	get_node("Panel/Join").connect("pressed", self, "_on_join_pressed")
+	
+func _input(event):
+	if event is InputEventKey:
+		if event.pressed:
+			if event.scancode == KEY_F11:
+				OS.window_fullscreen = not OS.window_fullscreen
