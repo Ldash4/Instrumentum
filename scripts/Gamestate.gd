@@ -3,7 +3,8 @@ extends Node
 const DEFAULT_PORT = 27015
 const DEFAULT_IP = "83.254.45.109"
 const MAX_PLAYERS = 16
-const VERSION = "1.0"
+const VERSION = "1.01"
+const TICKRATE = 1 / 30
 
 onready var player_scene = load("res://scenes/Player.tscn")
 

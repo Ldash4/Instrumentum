@@ -1,14 +1,32 @@
 extends Control
 
+func is_valid_port(port):
+	return int(port) and int(port) < 65536
+	
+func show_error(error):
+	$Panel/Error.text = error
+		
+
 func _on_host_pressed():
-	Gamestate.print_debug("Clicked host")
-	hide()
-	Gamestate.host_game(Gamestate.DEFAULT_PORT, Gamestate.MAX_PLAYERS)
+
+	if not is_valid_port($Panel/Port.text):
+		show_error("Invalid port.")
+		return
+		
+	Gamestate.host_game(int($Panel/Port.text), Gamestate.MAX_PLAYERS)
+	hide()		
 
 func _on_join_pressed():
-	Gamestate.print_debug("Clicked join")
+	if not $Panel/IP.text.is_valid_ip_address():
+		show_error("Invalid IP address.")
+		return
+		
+	if not is_valid_port($Panel/Port.text):
+		show_error("Invalid port.")
+		return
+
+	Gamestate.join_game($Panel/IP.text, int($Panel/Port.text))
 	hide()
-	Gamestate.join_game(Gamestate.DEFAULT_IP, Gamestate.DEFAULT_PORT)
 	
 func _ready():
 	get_node("Panel/Host").connect("pressed", self, "_on_host_pressed")
