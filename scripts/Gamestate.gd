@@ -3,7 +3,7 @@ extends Node
 const DEFAULT_PORT = 27015
 const DEFAULT_IP = "83.254.45.109"
 const MAX_PLAYERS = 16
-const VERSION = "1.02"
+const VERSION = "1.04"
 const PLAYER_TICKRATE = 1 / 30
 var last_player_tick = 0
 const PROP_TICKRATE = 1 / 30
@@ -71,9 +71,10 @@ func host_game(port, maxplayers):
 	host.create_server(port, maxplayers)
 	get_tree().set_network_peer(host)
 	
-	players[0] = create_player(1, true)
+	players[1] = create_player(1, true)
 	
 	print_debug(str("Started server with ", maxplayers, " players on port ", port))
+	OS.set_window_title(str("Instrumentum v", VERSION, " - HOST"))
 	
 func join_game(ip, port):
 	host = NetworkedMultiplayerENet.new()
@@ -81,6 +82,7 @@ func join_game(ip, port):
 	get_tree().set_network_peer(host)
 	
 	print_debug(str("Connected to server at ", ip, ":", port))
+	OS.set_window_title(str("Instrumentum v", VERSION, " - CLIENT"))
 	
 func _connected_ok():
 	rpc("register_player", get_tree().get_network_unique_id())
@@ -138,13 +140,13 @@ func _ready():
 	print_debug("Game initialized")
 	
 func _process(delta):
-	
-	last_player_tick += delta
-	if last_player_tick >= PLAYER_TICKRATE:
-		last_player_tick -= PLAYER_TICKRATE
-		emit_signal("player_tick")
-		
-	last_prop_tick += delta
-	if last_prop_tick >= PROP_TICKRATE:
-		last_prop_tick -= PROP_TICKRATE
-		emit_signal("prop_tick")
+	if get_tree().has_network_peer():
+		last_player_tick += delta
+		if last_player_tick >= PLAYER_TICKRATE:
+			last_player_tick -= PLAYER_TICKRATE
+			emit_signal("player_tick")
+			
+		last_prop_tick += delta
+		if last_prop_tick >= PROP_TICKRATE:
+			last_prop_tick -= PROP_TICKRATE
+			emit_signal("prop_tick")

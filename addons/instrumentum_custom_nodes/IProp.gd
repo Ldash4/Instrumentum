@@ -42,7 +42,7 @@ func instanciate_prop(prop_name, position):
 
 var props = {}
 
-sync func create_prop(prop_name, position, id):
+remote func create_prop(prop_name, position, id):
 	props[id] = instanciate_prop(prop_name, position)
 	return props[id]
 
@@ -54,9 +54,11 @@ remote func request_prop(prop_name, position):
 			
 		Gamestate.print_debug(str("Creating prop ", prop_name,  " at ", position, " with id ", id))
 		rpc("create_prop", prop_name, position, id)
+		create_prop(prop_name, position, id)
 	else:
 		print_debug(str("Asking server to create prop ", prop_name,  " at ", position))
 		rpc_id(1, "request_prop", prop_name, position)
+		
 
 # Glue
 
@@ -72,7 +74,6 @@ func _update_prop():
 			linear_velocity = slave_linear_velocity
 			angular_velocity = slave_angular_velocity
 			rotation = slave_rotation
-		
 
 func _ready():
 	load_props()
