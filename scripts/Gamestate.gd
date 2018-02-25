@@ -3,7 +3,7 @@ extends Node
 const DEFAULT_PORT = 27015
 const DEFAULT_IP = "83.254.45.109"
 const MAX_PLAYERS = 16
-const VERSION = "1.10"
+const VERSION = "1.11"
 const PLAYER_TICKRATE = 1 / 30
 var last_player_tick = 0
 const PROP_TICKRATE = 1 / 15
