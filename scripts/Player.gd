@@ -32,8 +32,7 @@ func _input(event):
 		elif event is InputEventKey:
 			if event.scancode == KEY_H:
 				
-				Gamestate.print_debug("Trying to spawn prop")
-				Gamestate.request_prop("box", translation + Vector3(0, 3, 0))
+				IProp.request_prop("box", translation + Vector3(0, 3, 0))
 
 
 func _physics_process(delta):
