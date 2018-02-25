@@ -6,7 +6,7 @@ const SENSITIVITY = 0.001
 const MAX_SPEED = 20
 const ACCELERATION = 0.5
 const DECELERATION = 0.9
-const INTERP_RATE = 0.3
+const INTERP_RATE = 0.5
 const GRAVITY = -9.8
 const UP = Vector3(0, 1, 0)
 
