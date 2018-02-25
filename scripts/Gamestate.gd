@@ -51,7 +51,8 @@ remote func register_player(id):
 		for player_id in players:
 			if id != 1: # Don't send to the server (yourself)
 				rpc_id(id, "register_player", player_id)
-			rpc_id(player_id, "register_player", id)
+			if player_id != 1:
+				rpc_id(player_id, "register_player", id)
 			
 	players[id] = create_player(id, false)
 	
