@@ -24,7 +24,7 @@ func print_debug(string):
 
 # Player management
 
-var players = []
+var players = {}
 
 func create_player(id, local):
 	var player = player_scene.instance()
