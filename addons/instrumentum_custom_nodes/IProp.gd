@@ -30,11 +30,12 @@ func load_props():
 		
 		prop_folder = prop_iterator.get_next()
 
-func instanciate_prop(prop_name, position):
+func instanciate_prop(prop_name, position, id):
 	if prop_scenes.has(prop_name):
 		Gamestate.print_debug(str("Created instance of prop: ", prop_name))
 		var prop = prop_scenes[prop_name].instance()
-		get_tree().current_scene.get_node("Props").add_child(prop, true)
+		prop.name = str(prop_name, "_", id)
+		get_tree().current_scene.get_node("Props").add_child(prop)
 		prop.translation = position
 		return prop
 	else:
@@ -43,7 +44,7 @@ func instanciate_prop(prop_name, position):
 var props = {}
 
 remote func create_prop(prop_name, position, id):
-	props[id] = instanciate_prop(prop_name, position)
+	props[id] = instanciate_prop(prop_name, position, id)
 	return props[id]
 
 remote func request_prop(prop_name, position):
