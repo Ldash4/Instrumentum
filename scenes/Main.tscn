@@ -11,8 +11,6 @@
 
 [node name="Props" type="Spatial" parent="." index="2"]
 
-[node name="World" type="Spatial" parent="." index="3" instance=ExtResource( 2 )]
-
-_sections_unfolded = [ "Transform" ]
+[node name="World" parent="." index="3" instance=ExtResource( 2 )]
 
 

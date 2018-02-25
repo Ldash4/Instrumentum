@@ -82,7 +82,3 @@ func _update_prop():
 func _ready():
 	load_props()
 	Gamestate.connect("prop_tick", self, "_update_prop")
-	
-	for child in get_children():
-		if child is CollisionShape:
-			shape_owner_add_shape(get_rid().get_id(), child.shape)
