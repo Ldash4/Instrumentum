@@ -5,6 +5,8 @@ extends RigidBody
 
 # Variables
 
+var prop_name
+
 # Slave variables
 
 slave var slave_translation = Vector3()
@@ -34,7 +36,8 @@ func instanciate_prop(prop_name, position, id):
 	if prop_scenes.has(prop_name):
 		Gamestate.print_debug(str("Created instance of prop: ", prop_name))
 		var prop = prop_scenes[prop_name].instance()
-		prop.name = str(prop_name, "_", id)
+		prop.name = str(id)
+		prop.prop_name = prop_name
 		get_tree().current_scene.get_node("Props").add_child(prop)
 		prop.translation = position
 		return prop
