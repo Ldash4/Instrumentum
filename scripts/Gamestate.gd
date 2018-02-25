@@ -5,10 +5,12 @@ const DEFAULT_IP = "83.254.45.109"
 const MAX_PLAYERS = 16
 const VERSION = "1.02"
 const PLAYER_TICKRATE = 1 / 30
+var last_player_tick = 0
 const PROP_TICKRATE = 1 / 30
+var last_prop_tick = 0
 
-signal player_tick(delta)
-signal prop_tick(delta)
+signal player_tick()
+signal prop_tick()
 
 onready var player_scene = load("res://scenes/Player.tscn")
 
@@ -22,7 +24,7 @@ func print_debug(string):
 
 # Player management
 
-var players = {}
+var players = []
 
 func create_player(id, local):
 	var player = player_scene.instance()
@@ -73,20 +75,41 @@ func load_props():
 	
 	while prop_folder != "":
 		if prop_iterator.file_exists(str("res://props/", prop_folder, "/", prop_folder, ".tscn")):
-			prop_scenes[prop_folder] = str("res://props/", prop_folder, "/", prop_folder, ".tscn")
+			prop_scenes[prop_folder] = load(str("res://props/", prop_folder, "/", prop_folder, ".tscn"))
 			print_debug(str("Found prop: ", prop_folder))
 		else:
 			print_debug(str("Did not find prop: ", prop_folder))
 		
 		prop_folder = prop_iterator.get_next()
 
-func create_prop(path):
-	var prop = load(path)
-	
-	if not prop:
-		printerr(str("Could not load prop from path ", path))
+func instanciate_prop(prop_name, position):
+	if prop_scenes.has(prop_name):
+		print_debug(str("Created instance of prop: ", prop_name))
+		var prop = prop_scenes[prop_name].instance()
+		get_tree().current_scene.get_node("Props").add_child(prop, true)
+		prop.translation = position
+		return prop
 	else:
-		pass
+		print_debug(str("Tried to create instance of unknown prop: ", prop_name))
+
+var props = {}
+
+sync func create_prop(prop_name, position, id):
+	props[id] = instanciate_prop(prop_name, position)
+	return props[id]
+
+remote func request_prop(prop_name, position):
+	if get_tree().is_network_server():
+		var id = 0
+		while props.has(id):
+			id += 1
+			
+		print_debug(str("Creating prop ", prop_name,  " at ", position, " with id ", id))
+		rpc("create_prop", prop_name, position, id)
+	else:
+		print_debug(str("Asking server to create prop ", prop_name,  " at ", position))
+		rpc_id(1, "request_prop", prop_name, position)
+		
 # Net functions
 
 var host
@@ -95,7 +118,7 @@ func host_game(port, maxplayers):
 	host.create_server(port, maxplayers)
 	get_tree().set_network_peer(host)
 	
-	players[1] = create_player(1, true)
+	players.append(create_player(1, true))
 	
 	print_debug(str("Started server with ", maxplayers, " players on port ", port))
 	
@@ -162,3 +185,15 @@ func _ready():
 	load_props()
 	
 	print_debug("Game initialized")
+	
+func _process(delta):
+	
+	last_player_tick += delta
+	if last_player_tick >= PLAYER_TICKRATE:
+		last_player_tick -= PLAYER_TICKRATE
+		emit_signal("player_tick")
+		
+	last_prop_tick += delta
+	if last_prop_tick >= PROP_TICKRATE:
+		last_prop_tick -= PROP_TICKRATE
+		emit_signal("prop_tick")

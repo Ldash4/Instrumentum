@@ -17,7 +17,7 @@ var local = true
 
 # Slave variables
 
-slave var slave_position = Vector3()
+slave var slave_translation = Vector3()
 slave var slave_velocity = Vector3()
 
 func _input(event):
@@ -29,6 +29,11 @@ func _input(event):
 			
 			rotation.y = angle.x
 			$Camera.rotation.x = angle.y
+		elif event is InputEventKey:
+			if event.scancode == KEY_H:
+				
+				Gamestate.print_debug("Trying to spawn prop")
+				Gamestate.request_prop("box", translation + Vector3(0, 3, 0))
 
 
 func _physics_process(delta):
@@ -71,10 +76,10 @@ func _physics_process(delta):
 		else:
 			velocity.y = clamp(velocity.y, -1000, 0)
 		
-		rset_unreliable("slave_position", transform.origin)
+		rset_unreliable("slave_translation", translation)
 		rset_unreliable("slave_velocity", velocity)
 	else:
-		transform.origin = slave_position
+		translation = slave_translation
 		velocity = slave_velocity
 	
 	move_and_slide(velocity, UP)
