@@ -3,7 +3,7 @@ extends Node
 const DEFAULT_PORT = 27015
 const DEFAULT_IP = "83.254.45.109"
 const MAX_PLAYERS = 16
-const VERSION = "1.08"
+const VERSION = "1.09"
 const PLAYER_TICKRATE = 1 / 30
 var last_player_tick = 0
 const PROP_TICKRATE = 1 / 30
@@ -49,7 +49,8 @@ remote func register_player(id):
 	if get_tree().is_network_server():
 		
 		for player_id in players:
-			rpc_id(id, "register_player", player_id)
+			if id != 1: # Don't send to the server (yourself)
+				rpc_id(id, "register_player", player_id)
 			rpc_id(player_id, "register_player", id)
 			
 	players[id] = create_player(id, false)

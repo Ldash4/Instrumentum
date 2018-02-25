@@ -32,7 +32,7 @@ func _input(event):
 		elif event is InputEventKey:
 			if event.scancode == KEY_H:
 				
-				IProp.request_prop("box", translation + Vector3(0, 3, 0))
+				IPropManager.request_prop("box", translation + Vector3(0, 3, 0))
 			elif event.scancode == KEY_U:
 				Gamestate.print_debug(str("spawned props: ", IProp.props.keys()))
 

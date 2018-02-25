@@ -16,8 +16,9 @@ config/icon="res://icon.png"
 
 [autoload]
 
-IProp="*res://addons/instrumentum_custom_nodes/IProp.gd"
 Gamestate="*res://scripts/Gamestate.gd"
+IProp="*res://addons/instrumentum_custom_nodes/IProp.gd"
+IPropManager="*res://addons/instrumentum_custom_nodes/IPropManager.gd"
 
 [editor_plugins]
 
