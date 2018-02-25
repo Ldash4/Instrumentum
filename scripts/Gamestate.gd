@@ -118,7 +118,7 @@ func host_game(port, maxplayers):
 	host.create_server(port, maxplayers)
 	get_tree().set_network_peer(host)
 	
-	players.append(create_player(1, true))
+	players[0] = create_player(1, true)
 	
 	print_debug(str("Started server with ", maxplayers, " players on port ", port))
 	
