@@ -6,6 +6,7 @@ const SENSITIVITY = 0.001
 const MAX_SPEED = 20
 const ACCELERATION = 0.5
 const DECELERATION = 0.9
+const INTERP_RATE = 0.3
 const GRAVITY = -9.8
 const UP = Vector3(0, 1, 0)
 
@@ -18,7 +19,8 @@ var local = true
 # Slave variables
 
 slave var slave_translation = Vector3()
-slave var slave_velocity = Vector3()
+#slave var slave_velocity = Vector3() # This isn't really needed, the translation
+# interpolation seems to be good enough
 
 func _input(event):
 	if local:
@@ -80,8 +82,8 @@ func _physics_process(delta):
 		rset_unreliable("slave_translation", translation)
 		rset_unreliable("slave_velocity", velocity)
 	else:
-		translation = slave_translation
-		velocity = slave_velocity
+		translation = translation.linear_interpolate(slave_translation, INTERP_RATE)
+		#velocity = slave_velocity
 	
 	move_and_slide(velocity, UP)
 

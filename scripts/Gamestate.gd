@@ -6,7 +6,7 @@ const MAX_PLAYERS = 16
 const VERSION = "1.09"
 const PLAYER_TICKRATE = 1 / 30
 var last_player_tick = 0
-const PROP_TICKRATE = 1 / 30
+const PROP_TICKRATE = 1 / 15
 var last_prop_tick = 0
 
 signal player_tick()
