@@ -60,7 +60,7 @@ remote func request_prop(prop_name, position):
 		rpc("create_prop", prop_name, position, id)
 		create_prop(prop_name, position, id)
 	else:
-		print_debug(str("Asking server to create prop ", prop_name,  " at ", position))
+		Gamestate.print_debug(str("Asking server to create prop ", prop_name,  " at ", position))
 		rpc_id(1, "request_prop", prop_name, position)
 		
 
